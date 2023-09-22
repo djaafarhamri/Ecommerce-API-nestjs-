@@ -8,10 +8,8 @@ export class AuthController {
 
   @Post('signup')
   signup(@Body() newUserData: AuthDto) {
-    console.log({
-      newUserData,
-    });
-    return this.authService.signup();
+    console.log('newUserData: ', newUserData);
+    return this.authService.signup(newUserData);
   }
 
   @Post('signin')

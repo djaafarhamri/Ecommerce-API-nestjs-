@@ -1,6 +1,6 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsString } from 'class-validator';
 
-export class AuthDto {
+export class SignupDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -15,6 +15,7 @@ export class AuthDto {
   @IsString()
   lastName: string;
 
+  @IsIn(['ADMIN', 'USER'])
   @IsString()
-  role: string;
+  role: 'ADMIN' | 'USER';
 }

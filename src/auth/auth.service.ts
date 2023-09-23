@@ -25,9 +25,8 @@ export class AuthService {
           password: hashedPassword,
         },
       });
-      // return the saved user
-      delete newUser.password;
-      return newUser;
+      // send back the token
+      return this.signToken(newUser.id, newUser.email);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -68,7 +67,7 @@ export class AuthService {
       email,
     };
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: '1h',
+      expiresIn: '15m',
       secret: this.config.get('JWT_SECRET'),
     });
     return { access_token: token };

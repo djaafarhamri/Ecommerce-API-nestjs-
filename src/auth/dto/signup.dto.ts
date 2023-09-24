@@ -17,5 +17,5 @@ export class SignupDto {
 
   @IsIn(['ADMIN', 'USER'])
   @IsString()
-  role: 'ADMIN' | 'USER';
+  role: 'ADMIN' | 'USER' = 'USER';
 }

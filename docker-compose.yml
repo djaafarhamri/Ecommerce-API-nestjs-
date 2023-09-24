@@ -10,6 +10,16 @@ services:
       POSTGRES_DB: ecommerce_api
     networks:
       - ecommerce_api_network
+  test-db: 
+    image: postgres:16.0
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: ecommerce_api
+    networks:
+      - ecommerce_api_network
 networks:
   ecommerce_api_network:
 

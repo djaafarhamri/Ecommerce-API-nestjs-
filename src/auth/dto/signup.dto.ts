@@ -15,6 +15,9 @@ export class SignupDto {
   @IsString()
   lastName: string;
 
+  @IsString()
+  phone: string;
+
   @IsIn(['ADMIN', 'USER'])
   @IsString()
   role: 'ADMIN' | 'USER' = 'USER';

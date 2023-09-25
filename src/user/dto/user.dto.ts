@@ -8,7 +8,7 @@ export class UserDto {
   lastName?: string;
   role: string;
   phone: string;
-  address: AddressDto;
+  address?: AddressDto;
   createdAt: Date;
   updatedAt: Date;
 }

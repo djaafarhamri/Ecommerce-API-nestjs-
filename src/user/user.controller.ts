@@ -1,21 +1,28 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, UseGuards, Body } from '@nestjs/common';
 import { UserService } from './user.service';
-import { GetUser } from 'src/auth/decorator';
-import { JwtGuard } from 'src/auth/guard';
+import { GetUser } from '../auth/decorator';
+import { JwtGuard } from '../auth/guard';
 
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @UseGuards(JwtGuard)
-  @Get('me')
+  @Get()
   me(@GetUser() user: any) {
-    console.log(user);
-    return 'This action returns my user: ' + user;
+    return user;
   }
 
-  @Get()
+  @Get('all')
   findAll() {
     return this.userService.findAll();
+  }
+
+  @UseGuards(JwtGuard)
+  @Put()
+  update(@Body() updateUserInfo: any, @GetUser() user: any) {
+    console.log('updateUserInfo');
+    console.log(updateUserInfo);
+    return this.userService.update(user, updateUserInfo);
   }
 }

@@ -4,12 +4,12 @@ import * as request from 'supertest';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { SigninDto, SignupDto } from '../src/auth/dto';
-import cookieParser from 'cookie-parser';
 // import { UserDto } from '../src/user/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  let jwt: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -23,7 +23,6 @@ describe('App e2e', () => {
     );
     await app.init();
     await app.listen(3333);
-    app.use(cookieParser());
 
     prisma = app.get(PrismaService);
     await prisma.cleanDB();
@@ -39,6 +38,7 @@ describe('App e2e', () => {
       password: 'testpassword2',
       firstName: 'testname',
       lastName: 'testname',
+      phone: '123456789',
       role: 'USER',
     };
     describe('POST /auth/signup', () => {
@@ -84,16 +84,14 @@ describe('App e2e', () => {
           email: 'testemail2@gmail.com',
           password: 'testpassword2',
         };
-        const rq = request(app.getHttpServer())
+        return request(app.getHttpServer())
           .post('/auth/signin')
           .send(user)
           .expect(200)
           .expect((res) => {
-            console.log('res: ', res);
-            expect(res.headers).toHaveProperty('set-cookie');
+            expect(res.body).toHaveProperty('access_token');
+            jwt = 'Bearer ' + res.body.access_token;
           });
-        console.log('cookies: ', rq);
-        return rq;
       });
     });
   });
@@ -101,7 +99,34 @@ describe('App e2e', () => {
   describe('User', () => {
     describe('GET /users/me', () => {
       it('should get the authenticated user profile', async () => {
-        return request(app.getHttpServer()).get('/users/me').expect(200);
+        //send request with authorisation bearer token
+        return request(app.getHttpServer())
+          .get('/user')
+          .set('Authorization', jwt)
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).toHaveProperty('id');
+          });
+      });
+      it('should not get unauthenticated user profile', async () => {
+        //send request with authorisation bearer token
+        return request(app.getHttpServer())
+          .get('/user')
+          .set('Authorization', 'Bearer ' + 'invalidtoken')
+          .expect(401);
+      });
+      it('should update authenticated user', async () => {
+        //send request with authorisation bearer token
+        return request(app.getHttpServer())
+          .put('/user')
+          .set('Authorization', jwt)
+          .send({
+            firstName: 'testname2',
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).toHaveProperty('firstName', 'testname2');
+          });
       });
     });
   });

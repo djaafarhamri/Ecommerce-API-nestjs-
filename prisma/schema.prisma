@@ -53,22 +53,22 @@ model Product {
 }
 
 model Variant {
-  id        Int        @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   name      String
   values    String[]
   image     String?
   quantity  Int
   productId Int
-  product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   items     CartItem[]
   orders    OrderItem[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 model Category {
   id          Int       @id @default(autoincrement())
-  name        String
+  name        String    @unique
   description String?
   products    Product[]
   createdAt   DateTime  @default(now())
@@ -117,15 +117,15 @@ model Promotion {
 }
 
 model Order {
-  id          Int        @id @default(autoincrement())
-  user        User       @relation(fields: [userId], references: [id])
-  userId      Int
-  items       OrderItem[]
-  total       Float
-  discount    Discount? @relation(fields: [discountId], references: [id])
-  discountId  Int?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id         Int         @id @default(autoincrement())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     Int
+  items      OrderItem[]
+  total      Float
+  discount   Discount?   @relation(fields: [discountId], references: [id])
+  discountId Int?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model OrderItem {

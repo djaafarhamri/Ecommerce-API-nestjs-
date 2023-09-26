@@ -27,7 +27,7 @@ export class AuthService {
         },
       });
       // send back the token
-      return this.signToken(newUser.id, newUser.email, res);
+      return this.signToken(newUser.id, newUser.email, newUser.role, res);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -56,17 +56,19 @@ export class AuthService {
       throw new ForbiddenException('Invalid credentials');
     }
     // send back the token
-    return this.signToken(user.id, user.email, res);
+    return this.signToken(user.id, user.email, user.role, res);
   }
 
   async signToken(
     userId: number,
     email: string,
+    role: string,
     res: Response,
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       email,
+      role,
     };
     const token = await this.jwt.signAsync(payload, {
       expiresIn: '1d',

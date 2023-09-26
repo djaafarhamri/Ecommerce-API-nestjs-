@@ -5,8 +5,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ProductService {
   constructor(private prisma: PrismaService) {}
 
-  addProduct(product: any) {
-    return this.prisma.product.create({
+  async addProduct(product: any) {
+    return await this.prisma.product.create({
       data: {
         ...product,
         category: {
@@ -21,8 +21,8 @@ export class ProductService {
     });
   }
 
-  updateProduct(id: number, product: any) {
-    return this.prisma.product.update({
+  async updateProduct(id: number, product: any) {
+    return await this.prisma.product.update({
       where: { id },
       data: {
         ...product,
@@ -35,20 +35,28 @@ export class ProductService {
     });
   }
 
-  deleteProduct(id: number) {
-    return this.prisma.product.delete({
+  async deleteProduct(id: number) {
+    return await this.prisma.product.delete({
       where: { id },
     });
   }
 
-  findAll() {
-    return this.prisma.product.findMany();
+  async findAll() {
+    return await this.prisma.product.findMany({
+      include: {
+        variants: true,
+        category: true,
+        promotions: true,
+      },
+    });
   }
 
-  findAllByCategory() {
-    return this.prisma.product.findMany({
+  async findAllByCategory() {
+    return await this.prisma.product.findMany({
       include: {
+        variants: true,
         category: true,
+        promotions: true,
       },
     });
   }

@@ -5,37 +5,37 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CategoryService {
   constructor(private prisma: PrismaService) {}
 
-  addCategory(category: any) {
-    return this.prisma.category.create({
+  async addCategory(category: any) {
+    return await this.prisma.category.create({
       data: category,
     });
   }
 
-  updateCategory(id: number, category: any) {
-    return this.prisma.category.update({
+  async updateCategory(id: number, category: any) {
+    return await this.prisma.category.update({
       where: { id },
       data: category,
     });
   }
 
-  deleteCategory(id: number) {
-    return this.prisma.category.delete({
+  async deleteCategory(id: number) {
+    return await this.prisma.category.delete({
       where: { id },
     });
   }
 
-  findAll() {
-    return this.prisma.category.findMany();
+  async findAll() {
+    return await this.prisma.category.findMany();
   }
 
-  findOneByName(name: string) {
-    return this.prisma.category.findUnique({
+  async findOneByName(name: string) {
+    return await this.prisma.category.findUnique({
       where: { name },
     });
   }
 
-  findOneById(id: number) {
-    return this.prisma.category.findUnique({
+  async findOneById(id: number) {
+    return await this.prisma.category.findUnique({
       where: { id },
     });
   }

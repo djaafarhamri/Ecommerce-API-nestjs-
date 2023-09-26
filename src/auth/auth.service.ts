@@ -24,6 +24,9 @@ export class AuthService {
         data: {
           ...newUserData,
           password: hashedPassword,
+          cart: {
+            create: {},
+          },
         },
       });
       // send back the token

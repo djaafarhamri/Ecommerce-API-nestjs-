@@ -5,8 +5,8 @@ import { PrismaService } from '../prisma/prisma.service';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  me(req: any) {
-    return this.prisma.user.findUnique({
+  async me(req: any) {
+    return await this.prisma.user.findUnique({
       where: {
         id: req.user.id,
       },
@@ -16,12 +16,12 @@ export class UserService {
     });
   }
 
-  findAll() {
-    return this.prisma.user.findMany();
+  async findAll() {
+    return await this.prisma.user.findMany();
   }
 
-  update(req: any, updateUserInfo: any) {
-    return this.prisma.user.update({
+  async update(req: any, updateUserInfo: any) {
+    return await this.prisma.user.update({
       where: {
         id: req.user.id,
       },

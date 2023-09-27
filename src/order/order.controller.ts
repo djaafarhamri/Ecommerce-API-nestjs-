@@ -1,14 +1,16 @@
-import { Controller, Delete, Get, Post, Req } from '@nestjs/common';
+import { Controller, Delete, Get, Post } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { NewOrderCartDto } from './dtos/newOrderCart.dto';
+import { GetUser } from 'src/auth/decorators';
+import { UserFromReq } from 'src/dtos';
 
 @Controller('order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Post()
-  async newOrder(@Req() req: any, cart: NewOrderCartDto) {
-    return await this.orderService.newOrder(req.user, cart);
+  async newOrder(@GetUser() user: UserFromReq, cart: NewOrderCartDto) {
+    return await this.orderService.newOrder(user, cart);
   }
 
   @Get()
@@ -17,8 +19,8 @@ export class OrderController {
   }
 
   @Get('user')
-  async getOrdersByUser(@Req() req: any) {
-    return await this.orderService.getOrdersByUser(req.user);
+  async getOrdersByUser(@GetUser() user: UserFromReq) {
+    return await this.orderService.getOrdersByUser(user);
   }
 
   @Get(':id')

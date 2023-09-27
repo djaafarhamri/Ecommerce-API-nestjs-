@@ -1,14 +1,8 @@
-import {
-  Controller,
-  Put,
-  UseGuards,
-  Req,
-  Get,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Put, UseGuards, Get, Param, Delete } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { JwtGuard } from 'src/auth/guard';
+import { GetUser } from 'src/auth/decorators';
+import { UserFromReq } from 'src/dtos';
 
 @Controller('cart')
 export class CartController {
@@ -17,17 +11,17 @@ export class CartController {
   @UseGuards(JwtGuard)
   @Put('add-to-cart/:variantId/:quantity')
   async addToCart(
-    @Req() req: any,
+    @GetUser() user: UserFromReq,
     @Param('variantId') variantId: number,
     @Param('quantity') quantity: number,
   ) {
-    return await this.cartService.addToCart(req.user, variantId, quantity);
+    return await this.cartService.addToCart(user, variantId, quantity);
   }
 
   @UseGuards(JwtGuard)
   @Get()
-  async getCart(@Req() req: any) {
-    return await this.cartService.getCart(req.user);
+  async getCart(@GetUser() user: UserFromReq) {
+    return await this.cartService.getCart(user);
   }
 
   @UseGuards(JwtGuard)
@@ -38,8 +32,8 @@ export class CartController {
 
   @UseGuards(JwtGuard)
   @Delete('clear-cart')
-  async clearCart(@Req() req: any) {
-    return await this.cartService.clearCart(req.user);
+  async clearCart(@GetUser() user: UserFromReq) {
+    return await this.cartService.clearCart(user);
   }
 
   @UseGuards(JwtGuard)

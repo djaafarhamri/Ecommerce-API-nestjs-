@@ -2,13 +2,14 @@ import {
   Controller,
   UseGuards,
   Post,
-  Req,
   Delete,
   Param,
   Get,
 } from '@nestjs/common';
 import { WishlistService } from './wishlist.service';
 import { JwtGuard } from 'src/auth/guard';
+import { UserFromReq } from 'src/dtos';
+import { GetUser } from 'src/auth/decorators';
 
 @UseGuards(JwtGuard)
 @Controller('wishlist')
@@ -16,8 +17,8 @@ export class WishlistController {
   constructor(private wishlistService: WishlistService) {}
 
   @Post(':id')
-  addToWishList(@Param('id') productId: number, @Req() req: any) {
-    return this.wishlistService.addToWishList(productId, req.user);
+  addToWishList(@Param('id') productId: number, @GetUser() user: UserFromReq) {
+    return this.wishlistService.addToWishList(productId, user);
   }
 
   @Delete(':id')
@@ -26,12 +27,12 @@ export class WishlistController {
   }
 
   @Delete()
-  cleanWishList(@Req() req: any) {
-    return this.wishlistService.cleanWishList(req.user);
+  cleanWishList(@GetUser() user: UserFromReq) {
+    return this.wishlistService.cleanWishList(user);
   }
 
   @Get()
-  getWishList(@Req() req: any) {
-    return this.wishlistService.getWishList(req.user);
+  getWishList(@GetUser() user: UserFromReq) {
+    return this.wishlistService.getWishList(user);
   }
 }

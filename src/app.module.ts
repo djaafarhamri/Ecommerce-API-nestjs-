@@ -8,6 +8,7 @@ import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { CartModule } from './cart/cart.module';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { OrderModule } from './order/order.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,6 +21,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
     CategoryModule,
     CartModule,
     WishlistModule,
+    OrderModule,
   ],
 })
 export class AppModule {}

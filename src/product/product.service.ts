@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AddProductDto, UpdateProductDto } from './dto';
 
 @Injectable()
 export class ProductService {
   constructor(private prisma: PrismaService) {}
 
-  async addProduct(product: any) {
+  async addProduct(product: AddProductDto) {
     return await this.prisma.product.create({
       data: {
         ...product,
         category: {
-          connect: {
-            where: { name: product.categoryName },
-          },
+          connect: { name: product.category.name },
         },
         variants: {
           create: product.variants,
@@ -21,15 +20,13 @@ export class ProductService {
     });
   }
 
-  async updateProduct(id: number, product: any) {
+  async updateProduct(id: number, product: UpdateProductDto) {
     return await this.prisma.product.update({
       where: { id },
       data: {
         ...product,
         category: {
-          connect: {
-            where: { name: product.categoryName },
-          },
+          connect: { name: product.category.name },
         },
       },
     });

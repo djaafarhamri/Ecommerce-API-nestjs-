@@ -1,12 +1,13 @@
 import { Controller, Delete, Get, Post, Req } from '@nestjs/common';
 import { OrderService } from './order.service';
+import { NewOrderCartDto } from './dtos/newOrderCart.dto';
 
 @Controller('order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Post()
-  async newOrder(@Req() req: any, cart: any) {
+  async newOrder(@Req() req: any, cart: NewOrderCartDto) {
     return await this.orderService.newOrder(req.user, cart);
   }
 

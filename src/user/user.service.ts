@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { UpdateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -20,7 +21,7 @@ export class UserService {
     return await this.prisma.user.findMany();
   }
 
-  async update(req: any, updateUserInfo: any) {
+  async update(req: any, updateUserInfo: UpdateUserDto) {
     return await this.prisma.user.update({
       where: {
         id: req.user.id,

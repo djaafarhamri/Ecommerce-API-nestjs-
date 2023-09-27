@@ -2,7 +2,6 @@ import {
   Controller,
   UseGuards,
   Post,
-  Body,
   Req,
   Delete,
   Param,
@@ -16,9 +15,9 @@ import { JwtGuard } from 'src/auth/guard';
 export class WishlistController {
   constructor(private wishlistService: WishlistService) {}
 
-  @Post()
-  addToWishList(@Body() product: any, @Req() req: any) {
-    return this.wishlistService.addToWishList(product, req.user);
+  @Post(':id')
+  addToWishList(@Param('id') productId: number, @Req() req: any) {
+    return this.wishlistService.addToWishList(productId, req.user);
   }
 
   @Delete(':id')

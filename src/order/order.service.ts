@@ -1,21 +1,24 @@
 import { Injectable, UseGuards } from '@nestjs/common';
 import { AdminGuard, JwtGuard } from 'src/auth/guard';
+import { UserFromReq } from 'src/dtos';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { NewOrderCartDto } from './dtos';
+import { NewOrderItemDto } from './dtos';
 
 @Injectable()
 export class OrderService {
   constructor(private prisma: PrismaService) {}
 
-  async newOrder(user: any, cart: any) {
+  async newOrder(user: UserFromReq, cart: NewOrderCartDto) {
     // variant quantity - cart quantity
-    cart.items.forEach(async (item: any) => {
+    cart.items.forEach(async (item: NewOrderItemDto) => {
       const variant = await this.prisma.variant.findUnique({
         where: { id: item.variant.id },
         include: { product: true },
       });
       if (variant.quantity < item.quantity) {
         throw new Error(
-          `${item.product.name} Not enough ${item.name} in stock`,
+          `${item.variant.product.name} Not enough ${item.variant.name} in stock`,
         );
       }
       await this.prisma.variant.update({
@@ -27,13 +30,14 @@ export class OrderService {
       data: {
         user: { connect: { id: user.id } },
         items: {
-          create: cart.map((item: any) => ({
+          create: cart.items.map((item: NewOrderItemDto) => ({
             variant: { connect: { id: item.variant.id } },
             quantity: item.quantity,
           })),
         },
-        total: cart.reduce(
-          (acc: number, item: any) => acc + item.variant.price * item.quantity,
+        total: cart.items.reduce(
+          (acc: number, item: NewOrderItemDto) =>
+            acc + item.variant.product.price * item.quantity,
           0,
         ),
       },
@@ -50,7 +54,7 @@ export class OrderService {
   }
 
   @UseGuards(JwtGuard, AdminGuard)
-  async getOrdersByUser(user: any) {
+  async getOrdersByUser(user: UserFromReq) {
     return await this.prisma.order.findMany({
       where: { user: { id: user.id } },
       include: { items: { include: { variant: true } } },

@@ -5,17 +5,11 @@ export class AddProductDto {
   image: string;
   sku?: string;
   variants: VariantDto[];
-  category: string;
-  promotions?: PromotionDto;
+  category: {
+    name: string;
+    description?: string;
+  };
 }
-
-class PromotionDto {
-  name: string;
-  description?: string;
-  newPrice: number;
-  active: boolean;
-}
-
 class VariantDto {
   name: string;
   price: number;

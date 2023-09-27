@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { UserFromReq } from 'src/dtos';
 
 @Injectable()
 export class WishlistService {
   constructor(private prisma: PrismaService) {}
 
-  async addToWishList(product: any, user: any) {
+  async addToWishList(productId: number, user: UserFromReq) {
     return await this.prisma.wishlist.create({
       data: {
         product: {
           connect: {
-            id: product.id,
+            id: productId,
           },
         },
         user: {
@@ -28,13 +29,13 @@ export class WishlistService {
     });
   }
 
-  async cleanWishList(user: any) {
+  async cleanWishList(user: UserFromReq) {
     return await this.prisma.wishlist.deleteMany({
       where: { userId: user.id },
     });
   }
 
-  async getWishList(user: any) {
+  async getWishList(user: UserFromReq) {
     return await this.prisma.wishlist.findMany({
       where: { userId: user.id },
       include: {

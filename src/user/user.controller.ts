@@ -2,6 +2,7 @@ import { Controller, Get, Put, UseGuards, Body, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtGuard } from '../auth/guard';
 import { AdminGuard } from 'src/auth/guard/admin.guard';
+import { UpdateUserDto } from './dto';
 
 @Controller('user')
 export class UserController {
@@ -21,7 +22,7 @@ export class UserController {
 
   @UseGuards(JwtGuard)
   @Put()
-  update(@Body() updateUserInfo: any, @Req() req: any) {
+  update(@Body() updateUserInfo: UpdateUserDto, @Req() req: any) {
     return this.userService.update(req, updateUserInfo);
   }
 }

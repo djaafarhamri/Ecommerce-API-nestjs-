@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
+import { AdminGuard, JwtGuard } from 'src/auth/guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -41,12 +42,14 @@ export class OrderService {
     return { message: 'Order created' };
   }
 
+  @UseGuards(JwtGuard, AdminGuard)
   async getOrders() {
     return await this.prisma.order.findMany({
       include: { items: { include: { variant: true } } },
     });
   }
 
+  @UseGuards(JwtGuard, AdminGuard)
   async getOrdersByUser(user: any) {
     return await this.prisma.order.findMany({
       where: { user: { id: user.id } },
@@ -54,6 +57,7 @@ export class OrderService {
     });
   }
 
+  @UseGuards(JwtGuard, AdminGuard)
   async getOrder(id: number) {
     return await this.prisma.order.findUnique({
       where: { id },
@@ -61,6 +65,7 @@ export class OrderService {
     });
   }
 
+  @UseGuards(JwtGuard, AdminGuard)
   async deleteOrder(id: number) {
     return await this.prisma.order.delete({ where: { id } });
   }

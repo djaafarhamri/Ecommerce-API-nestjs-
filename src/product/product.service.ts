@@ -6,12 +6,13 @@ import { AddProductDto, UpdateProductDto } from './dto';
 export class ProductService {
   constructor(private prisma: PrismaService) {}
 
-  async addProduct(product: AddProductDto) {
+  async addProduct(product: AddProductDto, image: Express.Multer.File) {
     return await this.prisma.product.create({
       data: {
         ...product,
+        image: image.filename,
         category: {
-          connect: { name: product.category.name },
+          connect: { name: product.category },
         },
         variants: {
           create: product.variants,
@@ -20,13 +21,18 @@ export class ProductService {
     });
   }
 
-  async updateProduct(id: number, product: UpdateProductDto) {
+  async updateProduct(
+    id: number,
+    product: UpdateProductDto,
+    image: Express.Multer.File,
+  ) {
     return await this.prisma.product.update({
       where: { id },
       data: {
         ...product,
+        image: image.filename,
         category: {
-          connect: { name: product.category.name },
+          connect: { name: product.category },
         },
       },
     });

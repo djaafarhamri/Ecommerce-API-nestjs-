@@ -19,6 +19,7 @@ export class CategoryController {
   @UseGuards(JwtGuard, AdminGuard)
   @Post()
   addCategory(@Body() category: AddCategoryDto) {
+    console.log('here: ', category);
     return this.categoryService.addCategory(category);
   }
 
